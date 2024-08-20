@@ -6,9 +6,11 @@ const int Many_Roots = -1;
 const int One_Root = 1;
 const int Two_Roots = 2;
 const int No_Roots = 0;
-const int EXP = 0e-10;
+const double EXP = 1e-10;
 
-int SolveSquare(double a, double b, double c, double* x1, double* x2);
+int SolveSquare(double a, double b, double c, double* answer1, double* answer2);
+
+double Compare(double number1, double number2);
 
 int main(void)
 {
@@ -47,16 +49,22 @@ int main(void)
 
 int SolveSquare(double a, double b, double c, double* answer1, double* answer2)
 {
+    // зачем нужно???:
+    /*
+    assert(std::isfinite(a));
+    assert(std::isfinite(b));
+    assert(std::isfinite(c));
+    */
     assert(answer1 != NULL);
     assert(answer2 != NULL);
     assert(answer1 != answer2);
     double D = 0;
     D = b * b - 4 * a * c;
-    if (compare(a, 0))
+    if (Compare(a, 0))
     {
-        if (compare(b, 0))
+        if (Compare(b, 0))
         {
-            if (compare(c, 0))
+            if (Compare(c, 0))
                 return Many_Roots;
             else
                 return No_Roots;
@@ -71,7 +79,7 @@ int SolveSquare(double a, double b, double c, double* answer1, double* answer2)
     {
             if (D < 0)
                 return No_Roots;
-            else if (compare(D, 0))
+            else if (Compare(D, 0))
             {
                 *answer1 = -b / (2 * a);
                 return One_Root;
@@ -85,7 +93,10 @@ int SolveSquare(double a, double b, double c, double* answer1, double* answer2)
     }
 }
 
-int compare(number1, number2)
+double Compare(double number1, double number2)
 {
-
+    if (fabs(number1 - number2) < EXP)
+        return number2;
+    else
+        return number1;
 }
