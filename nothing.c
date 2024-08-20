@@ -2,12 +2,11 @@
 #include <math.h>
 #include <TXLib.h>
 
-//решить проблему с предупреждениями, числа с плавующей запятой, погрешность
-
 const int Many_Roots = -1;
 const int One_Root = 1;
 const int Two_Roots = 2;
 const int No_Roots = 0;
+const int EXP = 0e-10;
 
 int SolveSquare(double a, double b, double c, double* x1, double* x2);
 
@@ -16,10 +15,13 @@ int main(void)
     printf("It's a SolverSquare program\n");
 
     double a = 0, b = 0, c = 0;
+
     printf("Enter a: ");
     scanf("%lg", &a);
+
     printf("Enter b: ");
     scanf("%lg", &b);
+
     printf("Enter c: ");
     scanf("%lg", &c);
 
@@ -43,22 +45,25 @@ int main(void)
     return 0;
 }
 
-int SolveSquare(double a, double b, double c, double* x1, double* x2)
+int SolveSquare(double a, double b, double c, double* answer1, double* answer2)
 {
+    assert(answer1 != NULL);
+    assert(answer2 != NULL);
+    assert(answer1 != answer2);
     double D = 0;
     D = b * b - 4 * a * c;
-    if (a == 0)
+    if (compare(a, 0))
     {
-        if (b == 0)
+        if (compare(b, 0))
         {
-            if (c == 0)
+            if (compare(c, 0))
                 return Many_Roots;
             else
                 return No_Roots;
         }
         else
         {
-            *x1 = -c / b;
+            *answer1 = -c / b;
             return One_Root;
         }
     }
@@ -66,16 +71,21 @@ int SolveSquare(double a, double b, double c, double* x1, double* x2)
     {
             if (D < 0)
                 return No_Roots;
-            else if (D == 0)
+            else if (compare(D, 0))
             {
-                *x1 = -b / (2 * a);
+                *answer1 = -b / (2 * a);
                 return One_Root;
             }
             else
             {
-                *x1 = (-b + sqrt(D)) / (2 * a);
-                *x2 = (-b - sqrt(D)) / (2 * a);
+                *answer1 = (-b + sqrt(D)) / (2 * a);
+                *answer2 = (-b - sqrt(D)) / (2 * a);
                 return Two_Roots;
             }
     }
+}
+
+int compare(number1, number2)
+{
+
 }
