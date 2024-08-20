@@ -11,7 +11,7 @@ int SolverSquare(double a, double b, double c, double* x1, double* x2)
         if (b == 0)
         {
             if(c == 0)
-                return SS_Inf_Roots;
+                return -1;
             else
                 return 0;
         }
@@ -57,7 +57,7 @@ int main(void)
                 break;
         case 2: printf("x1 = %lg\n x2 = %lg\n", x1, x2);
                 break;
-        case SS_Inf_Roots: printf("Any numders\n");
+        case -1: printf("Any numders\n");
                 break;
         default: printf("main(): ERROR: nRoots = %d\n", nRoots);
                 return 1;
