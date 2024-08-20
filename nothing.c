@@ -1,70 +1,71 @@
 #include <stdio.h>
 #include <math.h>
 #include <TXLib.h>
+#include <assert.h>
+//#include <cmath>
 
+// enum
 const int Many_Roots = -1;
 const int One_Root = 1;
 const int Two_Roots = 2;
 const int No_Roots = 0;
-const double EXP = 1e-10;
 
 int SolveSquare(double a, double b, double c, double* answer1, double* answer2);
 
-double Compare(double number1, double number2);
+const double EXP = 1e-10;
 
-int main(void)
+bool IsZero(double number);
+
+// cppreference
+
+const int EXIT_SUCCESS = 0;
+const int EXIT_FAILURE = 1;
+
+int main()
 {
-    printf("It's a SolverSquare program\n");
+    printf("It's a SolveSquare program\n");
 
     double a = 0, b = 0, c = 0;
 
-    printf("Enter a: ");
-    scanf("%lg", &a);
 
-    printf("Enter b: ");
-    scanf("%lg", &b);
-
-    printf("Enter c: ");
-    scanf("%lg", &c);
-
+// функция ввода
 
     double x1 = 0, x2 = 0;
     int nRoots = SolveSquare(a, b, c, &x1, &x2);
 
-    switch(nRoots)
-    {
-        case No_Roots: printf("Answer: no roots\n");
-                break;
-        case One_Root: printf("Answer: x = %lg\n", x1);
-                break;
-        case Two_Roots: printf("Answer: x1 = %lg, x2 = %lg\n", x1, x2);
-                break;
-        case Many_Roots: printf("Answer: any numders\n");
-                break;
-        default: printf("main(): ERROR: nRoots = %d\n", nRoots);
-                return 1;
-    }
-    return 0;
+//функия вывода
+
+    return EXIT_SUCCESS;
+}
+
+
+void assert(bool expr)
+{
+   if (expr != true)
+   {
+     print LINE FILE
+     abort()
+   }
+
 }
 
 int SolveSquare(double a, double b, double c, double* answer1, double* answer2)
 {
-    // зачем нужно???:
-    /*
-    assert(std::isfinite(a));
-    assert(std::isfinite(b));
-    assert(std::isfinite(c));
-    */
-    assert(answer1 != NULL);
-    assert(answer2 != NULL);
-    assert(answer1 != answer2);
-    double D = 0;
-    D = b * b - 4 * a * c;
-    if (Compare(a, 0))
+    assert (isfinite(a));
+    assert (isfinite(b));
+    assert (isfinite(c));
+
+    assert (answer1 != NULL);
+    assert (answer2 != NULL);
+    assert (answer1 != answer2);
+
+    double D = b * b - 4 * a * c;
+
+    if (IsZero(a, 0))
     {
-        if (Compare(b, 0))
+        if (IsZero(b, 0))
         {
-            if (Compare(c, 0))
+            if (IsZero(c, 0))
                 return Many_Roots;
             else
                 return No_Roots;
@@ -79,24 +80,54 @@ int SolveSquare(double a, double b, double c, double* answer1, double* answer2)
     {
             if (D < 0)
                 return No_Roots;
-            else if (Compare(D, 0))
+            else if (IsZero(D, 0))
             {
                 *answer1 = -b / (2 * a);
                 return One_Root;
             }
             else
             {
-                *answer1 = (-b + sqrt(D)) / (2 * a);
-                *answer2 = (-b - sqrt(D)) / (2 * a);
+                double sqrt_D = sqrt(D);
+                *answer1 = (-b + sqrt_D) / (2 * a);
+                *answer2 = (-b - sqrt_D) / (2 * a);
                 return Two_Roots;
             }
     }
 }
 
-double Compare(double number1, double number2)
+// bool
+bool IsZero(double number)
 {
-    if (fabs(number1 - number2) < EXP)
-        return number2;
-    else
-        return number1;
+    return (fabs(number - 0) < EXP);
 }
+
+ // функция ввода
+
+void Enter(double a, double b, double c)
+{
+    printf("Enter a: ");
+    return a;
+
+    printf("Enter b: ");
+    scanf("%lg", &b);
+
+    printf("Enter c: ");
+    scanf("%lg", &c);
+}
+
+//функция вывода
+
+Output
+switch(nRoots)
+    {
+        case No_Roots: printf("Answer: no roots\n");
+                break;
+        case One_Root: printf("Answer: x = %lg\n", x1);
+                break;
+        case Two_Roots: printf("Answer: x1 = %lg, x2 = %lg\n", x1, x2);
+                break;
+        case Many_Roots: printf("Answer: any numders\n");
+                break;
+        default: printf("main(): ERROR: nRoots = %d\n", nRoots);
+                return EXIT_FAILURE;
+    }
