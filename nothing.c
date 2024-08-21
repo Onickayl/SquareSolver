@@ -6,28 +6,43 @@
 
 // enum
 
-const int Exit_Success = 0;
-const int Exit_Failure = 1;
+enum Exit_Status
+{
+    Exit_Success = 0,
+    Exit_Failure = 1,
+};
 
-const int Test_Success = 0;
-const int Test_Failure = 1;
+enum Test_Status
+{
+    Test_Success = 0,
+    Test_Failure = 1,
+};
 
-const int Many_Roots = -1;
-const int One_Root = 1;
-const int Two_Roots = 2;
-const int No_Roots = 0;
+enum AllTest_Status
+{
+    AllTest_Success = 0,
+    AllTest_Failure = 1,
+};
+
+enum Roots_Status
+{
+    Many_Roots = -1,
+    One_Root = 1,
+    Two_Roots = 2,
+    No_Roots = 0,
+};
 
 const double EXP = 1e-10;
 
-int SolveSquare(double a, double b, double c, double* x1, double* x2);
+Roots_Status SolveSquare(double a, double b, double c, double* x1, double* x2);
 
 bool IsZero(double number);
 
 void Input(double* a, double* b, double* c);
-int Output(double x1, double x2, int nRoots);
+Exit_Status Output(double x1, double x2, int nRoots);
 
-int UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight);
-int All_Tests();
+Test_Status UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight);
+AllTest_Status All_Tests();
 // cppreference
 
 
@@ -37,10 +52,10 @@ int main()
 
     int result = All_Tests();
 
-    if (result == Test_Failure)
+    if (result == AllTest_Failure)
     {
         printf("Error in tests");
-        return Test_Failure;
+        return AllTest_Failure;
     }
 
     double a = 0, b = 0, c = 0; // 0x100 0x200 0x300
@@ -73,7 +88,7 @@ void assert(bool expr)
 }   */
 
 // решалка
-int SolveSquare(double a, double b, double c, double* x1, double* x2)
+Roots_Status SolveSquare(double a, double b, double c, double* x1, double* x2)
 {                                        //NULL
     assert (isfinite(a));//NAN not a number
     assert (isfinite(b));
@@ -142,7 +157,7 @@ void Input(double* ptr_a, double* ptr_b, double* ptr_c)
 
 //функция вывода
 
-int Output(double x1, double x2, int nRoots)
+Exit_Status Output(double x1, double x2, int nRoots)
 {
     switch(nRoots)
     {
@@ -157,99 +172,99 @@ int Output(double x1, double x2, int nRoots)
         default: printf("main(): Error: nRoots = %d\n", nRoots);
                 return Exit_Failure;
     }
+    return Exit_Success;
 }
 
 // функция тестирования
 
-int UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight)
+Test_Status UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight)
 {
-     double x1 = 0, x2 = 0;
-     int nRoots = SolveSquare(a, b, c, &x1, &x2);
-     if (nRoots != nRootsRight)
-     {
-        printf("ErrorTest%d: nRoots = %d\n"
-                "Expected: nRoots = %d\n",
-                nRoots, nRootsRight);
+    double x1 = 0, x2 = 0;
+    int nRoots = SolveSquare(a, b, c, &x1, &x2);
+    if (nRoots == nRootsRight)
+    {
+        if (IsZero(x1 - x1right) || x1 == x2right)
+        {
+            if (x2 == x2right || x2 == x1right)
+                return Test_Success;
+            else
+            {
+                printf("ErrorTest%d: x2 = %lg\nExpected: x2 = %lg or x2 = %lg\n",
+                nTest, x2, x1right, x2right);
+                return Test_Failure;
+            }
+        }
+        else
+        {
+            printf("ErrorTest%d: x1 = %lg\nExpected: x1 = %lg or x1 = %lg\n",
+            nTest, x1, x1right, x2right);
+            return Test_Failure;
+        }
+    }
+    else
+    {
+        printf("ErrorTest%d: nRoots = %d\nExpected: nRootsRight = %d\n",
+        nTest, nRoots, nRootsRight);
         return Test_Failure;
-     }
-
-
-
-     return Test_Success;
+    }
 }
-
-int xTest(int nTest, double a, double b, double c, int nRootsRight)
+/* xTest
+int xTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight)
 {
-     double x1 = 0, x2 = 0;
-     int nRoots = SolveSquare(a, b, c, &x1, &x2);
-     if (nRoots != nRootsRight || x1 != x1right || x2 != x2right)
-     {
-        printf("ErrorTest%d: a = %lg, b = %lg, c = %lg, x1 = %lg, x2 = %lg, nRoots = %d\n"
-                "Expected: x1 = %lg, x2 = %lg, nRoots = %d\n",
-                nTest, a, b, c, x1, x2, nRoots,
-                x1right, x2right, nRootsRight);
-        return Test_Failure;
-     }
-
-     return Test_Success;
-}
-
-
-// под юнитест и ифами решить проблему порядка x
-
-//решить проблему с порядком чисел
-int All_Tests()
-{
-    int result = UnitTest(1, 1, -5, 4, 1, 4, 2);
-    if (result == Test_Failure)
+    double x1 = 0, x2 = 0;
+    int nRoots = SolveSquare(a, b, c, &x1, &x2);
+    if (x1 != x1right || x1 != x2right)
     {
-        printf("Error in tests");
+        printf("ErrorTest%d: x1 = %lg"
+                "Expected: x1 = %lg or x2 = %lg",
+                x1, x1right, x2right);
         return Test_Failure;
     }
-
-    result = UnitTest(2, 1, 14, 45, -5, -9, 2);
-    if (result == Test_Failure)
+    if (x2 != x1right || x2 != x2right)
     {
-        printf("Error in tests");
-        return Test_Failure;
-    }
-
-    result = UnitTest(3, 1, 3, -70, 7, -10, 2);
-    if (result == Test_Failure)
-    {
-        printf("Error in tests");
-        return Test_Failure;
-    }
-
-    result = UnitTest(4, -3, -1, 14, -2.33333, 2, 2);
-    if (result == Test_Failure)
-    {
-        printf("Error in tests");
-        return Test_Failure;
-    }
-
-    result = UnitTest(5, 3, 4, 20, 0, 0, No_Roots);
-    if (result == Test_Failure)
-    {
-        printf("Error in tests");
-        return Test_Failure;
-    }
-
-    result = UnitTest(6, 4, 4, 1, -0.5, 0, 1);
-    if (result == Test_Failure)
-    {
-        printf("Error in tests");
-        return Test_Failure;
-    }
-
-    result = UnitTest(7, 0, 0, 0, 0, 0, Many_Roots);
-    if (result == Test_Failure)
-    {
-        printf("Error in tests");
+        printf("ErrorTest%d: x2 = %lg"
+                "Expected: x1 = %lg or x2 = %lg",
+                x, x1right, x2right);
         return Test_Failure;
     }
 
     return Test_Success;
+} */
+
+// под юнитест и ифами решить проблему порядка x
+
+//решить проблему с порядком чисел
+AllTest_Status All_Tests()
+{
+    int result = UnitTest(1, 1, -5, 4, 1, 4, 2);
+    if (result == Test_Failure)
+        return AllTest_Failure;
+
+    result = UnitTest(2, 1, 14, 45, -9, -5, 2);
+    if (result == Test_Failure)
+        return AllTest_Failure;
+
+    result = UnitTest(3, 1, 3, -70, 7, -10, 2);
+    if (result == Test_Failure)
+        return AllTest_Failure;
+
+    result = UnitTest(4, 5, -8, -4, -0.4, 2, 2);
+    if (result == Test_Failure)
+        return AllTest_Failure;
+
+    result = UnitTest(5, 3, 4, 20, 0, 0, No_Roots);
+    if (result == Test_Failure)
+        return AllTest_Failure;
+
+    result = UnitTest(6, 4, 4, 1, -0.5, 0, 1);
+    if (result == Test_Failure)
+        return AllTest_Failure;
+
+    result = UnitTest(7, 0, 0, 0, 0, 0, Many_Roots);
+    if (result == Test_Failure)
+        return AllTest_Failure;
+
+    return AllTest_Success;
 }
 
 //Решалка_квадратки
