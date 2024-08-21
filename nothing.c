@@ -5,40 +5,58 @@
 //#include <cmath>
 
 // enum
+
+const int Exit_Success = 0;
+const int Exit_Failure = 1;
+
 const int Many_Roots = -1;
 const int One_Root = 1;
 const int Two_Roots = 2;
 const int No_Roots = 0;
 
-int SolveSquare(double a, double b, double c, double* answer1, double* answer2);
-
 const double EXP = 1e-10;
+
+int SolveSquare(double a, double b, double c, double* x1, double* x2);
 
 bool IsZero(double number);
 
+void Input(double* a, double* b, double* c);
+int Output(double x1, double x2, int nRoots);
+
+int UnitTest();
+
 // cppreference
 
-const int EXIT_SUCCESS = 0;
-const int EXIT_FAILURE = 1;
 
 int main()
 {
-    printf("It's a SolveSquare program\n");
+    printf("It's a SolverSquare program\n");
 
-    double a = 0, b = 0, c = 0;
+    int result = UnitTest();  //Возвращаемое значение показывает итог функции хорошо или плохо
+    if (result == 1)
+    {
+        printf("error in tests");
+        return 1;
+    }
 
+    double a = 0, b = 0, c = 0; // 0x100 0x200 0x300
 
-// функция ввода
+    Input(&a, &b, &c);  // функция ввода
+                         return <значение>;
+    //Testing program
+    Test(1, 2, 3);                        //Авто Тестирование на известных заранее наборах
+    Test(1, 0, 0);                        //Ручной ввод и вывод решений
+    Test(0, 2, 0);
 
+    //решение входных данных
     double x1 = 0, x2 = 0;
-    int nRoots = SolveSquare(a, b, c, &x1, &x2);
+    int nRoots = SolveSquare(a, b, c, &x1, &x2);    // функция решалки
+    Output(x1, x2, nRoots); //функия вывода
 
-//функия вывода
-
-    return EXIT_SUCCESS;
+    return Exit_Success;
 }
 
-
+ /*
 void assert(bool expr)
 {
    if (expr != true)
@@ -47,51 +65,51 @@ void assert(bool expr)
      abort()
    }
 
-}
+}   */
 
-int SolveSquare(double a, double b, double c, double* answer1, double* answer2)
-{
-    assert (isfinite(a));
+int SolveSquare(double a, double b, double c, double* x1, double* x2)
+{                                        //NULL
+    assert (isfinite(a));//NAN not a number
     assert (isfinite(b));
     assert (isfinite(c));
 
-    assert (answer1 != NULL);
-    assert (answer2 != NULL);
-    assert (answer1 != answer2);
+    assert (x1 != NULL);
+    assert (x2 != NULL);
+    assert (x1 != x2);
 
     double D = b * b - 4 * a * c;
 
-    if (IsZero(a, 0))
+    if (IsZero(a))
     {
-        if (IsZero(b, 0))
+        if (IsZero(b))
         {
-            if (IsZero(c, 0))
+            if (IsZero(c))
                 return Many_Roots;
             else
                 return No_Roots;
         }
         else
         {
-            *answer1 = -c / b;
+            *x1 = -c / b;
             return One_Root;
         }
     }
     else
     {
-            if (D < 0)
-                return No_Roots;
-            else if (IsZero(D, 0))
-            {
-                *answer1 = -b / (2 * a);
-                return One_Root;
-            }
-            else
-            {
-                double sqrt_D = sqrt(D);
-                *answer1 = (-b + sqrt_D) / (2 * a);
-                *answer2 = (-b - sqrt_D) / (2 * a);
-                return Two_Roots;
-            }
+        if (D < 0)
+            return No_Roots;
+        else if (IsZero(D))
+        {
+            *x1 = -b / (2 * a);
+            return One_Root;
+        }
+        else
+        {
+            double sqrt_D = sqrt(D);
+            *x1 = (-b + sqrt_D) / (2 * a);
+            *x2 = (-b - sqrt_D) / (2 * a);
+            return Two_Roots;
+        }
     }
 }
 
@@ -103,22 +121,24 @@ bool IsZero(double number)
 
  // функция ввода
 
-void Enter(double a, double b, double c)
+void Input(double* ptr_a, double* ptr_b, double* ptr_c)
 {
+
     printf("Enter a: ");
-    return a;
+    scanf("%lg", ptr_a);
 
     printf("Enter b: ");
-    scanf("%lg", &b);
+    scanf("%lg", ptr_b);
 
     printf("Enter c: ");
-    scanf("%lg", &c);
+    scanf("%lg", ptr_c);
 }
 
 //функция вывода
 
-Output
-switch(nRoots)
+int Output(double x1, double x2, int nRoots)
+{
+    switch(nRoots)
     {
         case No_Roots: printf("Answer: no roots\n");
                 break;
@@ -129,5 +149,20 @@ switch(nRoots)
         case Many_Roots: printf("Answer: any numders\n");
                 break;
         default: printf("main(): ERROR: nRoots = %d\n", nRoots);
-                return EXIT_FAILURE;
+                return Exit_Failure;
     }
+}
+
+// функция тестирования
+
+int UnitTest()
+{
+     // something smart
+}
+
+//Решалка_квадратки
+//main{UnitTest() input() решалка_квдратки() вывод_корней()}
+//1 0 0  -> 0
+// 2 3 4  -> 2 4
+// int Unit_Test {x1,x2; решалка_квадратки(1,0,0, &x1, &x2); x1 == 0 , x2 == 0;решалка_квадратки(2,3,4);x1 == 2, x4== 4}printf(Error %lf %lf %lf, trouble )
+// 0 -good, 1 -bad return 0;
