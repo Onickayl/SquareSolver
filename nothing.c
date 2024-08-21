@@ -9,6 +9,9 @@
 const int Exit_Success = 0;
 const int Exit_Failure = 1;
 
+const int Test_Success = 0;
+const int Test_Failure = 1;
+
 const int Many_Roots = -1;
 const int One_Root = 1;
 const int Two_Roots = 2;
@@ -23,8 +26,8 @@ bool IsZero(double number);
 void Input(double* a, double* b, double* c);
 int Output(double x1, double x2, int nRoots);
 
-int UnitTest();
-
+int UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight);
+int All_Tests();
 // cppreference
 
 
@@ -32,25 +35,27 @@ int main()
 {
     printf("It's a SolverSquare program\n");
 
-    int result = UnitTest();  //Возвращаемое значение показывает итог функции хорошо или плохо
-    if (result == 1)
+    int result = All_Tests();
+
+    if (result == Test_Failure)
     {
-        printf("error in tests");
-        return 1;
+        printf("Error in tests");
+        return Test_Failure;
     }
 
     double a = 0, b = 0, c = 0; // 0x100 0x200 0x300
 
     Input(&a, &b, &c);  // функция ввода
-                         return <значение>;
+//                         return <значение>;
     //Testing program
-    Test(1, 2, 3);                        //Авто Тестирование на известных заранее наборах
-    Test(1, 0, 0);                        //Ручной ввод и вывод решений
-    Test(0, 2, 0);
+    //Test(1, 2, 3);                        //Авто Тестирование на известных заранее наборах
+    //Test(1, 0, 0);                        //Ручной ввод и вывод решений
+    //Test(0, 2, 0);
 
     //решение входных данных
     double x1 = 0, x2 = 0;
     int nRoots = SolveSquare(a, b, c, &x1, &x2);    // функция решалки
+
     Output(x1, x2, nRoots); //функия вывода
 
     return Exit_Success;
@@ -67,6 +72,7 @@ void assert(bool expr)
 
 }   */
 
+// решалка
 int SolveSquare(double a, double b, double c, double* x1, double* x2)
 {                                        //NULL
     assert (isfinite(a));//NAN not a number
@@ -148,16 +154,102 @@ int Output(double x1, double x2, int nRoots)
                 break;
         case Many_Roots: printf("Answer: any numders\n");
                 break;
-        default: printf("main(): ERROR: nRoots = %d\n", nRoots);
+        default: printf("main(): Error: nRoots = %d\n", nRoots);
                 return Exit_Failure;
     }
 }
 
 // функция тестирования
 
-int UnitTest()
+int UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight)
 {
-     // something smart
+     double x1 = 0, x2 = 0;
+     int nRoots = SolveSquare(a, b, c, &x1, &x2);
+     if (nRoots != nRootsRight)
+     {
+        printf("ErrorTest%d: nRoots = %d\n"
+                "Expected: nRoots = %d\n",
+                nRoots, nRootsRight);
+        return Test_Failure;
+     }
+
+
+
+     return Test_Success;
+}
+
+int xTest(int nTest, double a, double b, double c, int nRootsRight)
+{
+     double x1 = 0, x2 = 0;
+     int nRoots = SolveSquare(a, b, c, &x1, &x2);
+     if (nRoots != nRootsRight || x1 != x1right || x2 != x2right)
+     {
+        printf("ErrorTest%d: a = %lg, b = %lg, c = %lg, x1 = %lg, x2 = %lg, nRoots = %d\n"
+                "Expected: x1 = %lg, x2 = %lg, nRoots = %d\n",
+                nTest, a, b, c, x1, x2, nRoots,
+                x1right, x2right, nRootsRight);
+        return Test_Failure;
+     }
+
+     return Test_Success;
+}
+
+
+// под юнитест и ифами решить проблему порядка x
+
+//решить проблему с порядком чисел
+int All_Tests()
+{
+    int result = UnitTest(1, 1, -5, 4, 1, 4, 2);
+    if (result == Test_Failure)
+    {
+        printf("Error in tests");
+        return Test_Failure;
+    }
+
+    result = UnitTest(2, 1, 14, 45, -5, -9, 2);
+    if (result == Test_Failure)
+    {
+        printf("Error in tests");
+        return Test_Failure;
+    }
+
+    result = UnitTest(3, 1, 3, -70, 7, -10, 2);
+    if (result == Test_Failure)
+    {
+        printf("Error in tests");
+        return Test_Failure;
+    }
+
+    result = UnitTest(4, -3, -1, 14, -2.33333, 2, 2);
+    if (result == Test_Failure)
+    {
+        printf("Error in tests");
+        return Test_Failure;
+    }
+
+    result = UnitTest(5, 3, 4, 20, 0, 0, No_Roots);
+    if (result == Test_Failure)
+    {
+        printf("Error in tests");
+        return Test_Failure;
+    }
+
+    result = UnitTest(6, 4, 4, 1, -0.5, 0, 1);
+    if (result == Test_Failure)
+    {
+        printf("Error in tests");
+        return Test_Failure;
+    }
+
+    result = UnitTest(7, 0, 0, 0, 0, 0, Many_Roots);
+    if (result == Test_Failure)
+    {
+        printf("Error in tests");
+        return Test_Failure;
+    }
+
+    return Test_Success;
 }
 
 //Решалка_квадратки
