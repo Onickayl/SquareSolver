@@ -4,8 +4,17 @@
 #include <assert.h>
 //#include <cmath>
 
-// enum
+// struct
 
+struct Variables
+{
+    int nTest;
+    double a, b, c;
+    double x1right, x2right;
+    int nRootsRight;
+};
+
+// enum
 enum Exit_Status
 {
     Exit_Success = 0,
@@ -34,6 +43,8 @@ enum Roots_Status
 
 const double EXP = 1e-10;
 
+
+// functions
 Roots_Status SolveSquare(double a, double b, double c, double* x1, double* x2);
 
 bool IsZero(double number);
@@ -41,10 +52,12 @@ bool IsZero(double number);
 void Input(double* a, double* b, double* c);
 Exit_Status Output(double x1, double x2, int nRoots);
 
-Test_Status UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight);
+//Test_Status UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight);
 AllTest_Status All_Tests();
-// cppreference
 
+int UnitTest(Variables data);
+
+// cppreference
 
 int main()
 {
@@ -177,7 +190,7 @@ Exit_Status Output(double x1, double x2, int nRoots)
 
 // функция тестирования
 
-Test_Status UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight)
+/*Test_Status UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight)
 {
     double x1 = 0, x2 = 0;
     int nRoots = SolveSquare(a, b, c, &x1, &x2);
@@ -207,60 +220,84 @@ Test_Status UnitTest(int nTest, double a, double b, double c, double x1right, do
         nTest, nRoots, nRootsRight);
         return Test_Failure;
     }
-}
-/* xTest
-int xTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight)
+}*/
+
+// new UnitTest
+
+int UnitTest(Variables data)
 {
     double x1 = 0, x2 = 0;
-    int nRoots = SolveSquare(a, b, c, &x1, &x2);
-    if (x1 != x1right || x1 != x2right)
+    int nRoots = SolveSquare(data.a, data.b, data.c, &x1, &x2);
+    if (nRoots == data.nRootsRight)
     {
-        printf("ErrorTest%d: x1 = %lg"
-                "Expected: x1 = %lg or x2 = %lg",
-                x1, x1right, x2right);
+        if (IsZero(x1 - data.x1right) || IsZero(x1 - data.x2right))
+        {
+            if (IsZero(x2 - data.x2right) || IsZero(x2 - data.x1right))
+                return Test_Success;
+            else
+            {
+                printf("ErrorTest%d: x2 = %lg\nExpected: x2 = %lg or x2 = %lg\n",
+                data.nTest, x2, data.x1right, data.x2right);
+                return Test_Failure;
+            }
+        }
+        else
+        {
+            printf("ErrorTest%d: x1 = %lg\nExpected: x1 = %lg or x1 = %lg\n",
+            data.nTest, x1, data.x1right, data.x2right);
+            return Test_Failure;
+        }
+    }
+    else
+    {
+        printf("ErrorTest%d: nRoots = %d\nExpected: nRootsRight = %d\n",
+        data.nTest, nRoots, data.nRootsRight);
         return Test_Failure;
     }
-    if (x2 != x1right || x2 != x2right)
-    {
-        printf("ErrorTest%d: x2 = %lg"
-                "Expected: x1 = %lg or x2 = %lg",
-                x, x1right, x2right);
-        return Test_Failure;
-    }
+}
 
-    return Test_Success;
-} */
-
-// под юнитест и ифами решить проблему порядка x
-
-//решить проблему с порядком чисел
+// Все тесты внутри
 AllTest_Status All_Tests()
 {
-    int result = UnitTest(1, 1, -5, 4, 1, 4, 2);
+    Variables test = {1, 1, -5, 4, 1, 4, 2};
+
+    int result = UnitTest(test);
     if (result == Test_Failure)
         return AllTest_Failure;
 
-    result = UnitTest(2, 1, 14, 45, -9, -5, 2);
+    test = {2, 1, 14, 45, -9, -5, 2};
+
+    result = UnitTest(test);
     if (result == Test_Failure)
         return AllTest_Failure;
 
-    result = UnitTest(3, 1, 3, -70, 7, -10, 2);
+    test = {3, 1, 3, -70, 7, -10, 2};
+
+    result = UnitTest(test);
     if (result == Test_Failure)
         return AllTest_Failure;
 
-    result = UnitTest(4, 5, -8, -4, -0.4, 2, 2);
+    test = {4, 5, -8, -4, -0.4, 2, 2};
+
+    result = UnitTest(test);
     if (result == Test_Failure)
         return AllTest_Failure;
 
-    result = UnitTest(5, 3, 4, 20, 0, 0, No_Roots);
+    test = {5, 3, 4, 20, 0, 0, No_Roots};
+
+    result = UnitTest(test);
     if (result == Test_Failure)
         return AllTest_Failure;
 
-    result = UnitTest(6, 4, 4, 1, -0.5, 0, 1);
+    test = {6, 4, 4, 1, -0.5, 0, 1};
+
+    result = UnitTest(test);
     if (result == Test_Failure)
         return AllTest_Failure;
 
-    result = UnitTest(7, 0, 0, 0, 0, 0, Many_Roots);
+    test = {7, 0, 0, 0, 0, 0, Many_Roots};
+
+    result = UnitTest(test);
     if (result == Test_Failure)
         return AllTest_Failure;
 
