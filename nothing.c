@@ -5,13 +5,22 @@
 //#include <cmath>
 
 // struct
-
-struct Variables
+struct Test_Variables
 {
     int nTest;
-    double a, b, c;
     double x1right, x2right;
     int nRootsRight;
+};
+
+struct Coefficients
+{
+    double a, b, c;
+};
+
+struct Roots
+{
+    double x1, x2;
+    int nRoots;
 };
 
 // enum
@@ -41,21 +50,25 @@ enum Roots_Status
     No_Roots = 0,
 };
 
-const double EXP = 1e-10;
+const double EXP = 1e-5;
 
 
 // functions
-Roots_Status SolveSquare(double a, double b, double c, double* x1, double* x2);
+//Roots_Status SolveSquare(double a, double b, double c, double* x1, double* x2);
+Roots_Status SolveSquare(Coefficients coef, Roots* res);
 
 bool IsZero(double number);
 
-void Input(double* a, double* b, double* c);
-Exit_Status Output(double x1, double x2, int nRoots);
+//void Input(double* a, double* b, double* c);
+//Exit_Status Output(double x1, double x2, int nRoots);
+
+void Input(Coefficients* coef);
+Exit_Status Output(Roots res);
 
 //Test_Status UnitTest(int nTest, double a, double b, double c, double x1right, double x2right, int nRootsRight);
 AllTest_Status All_Tests();
 
-int UnitTest(Variables data);
+Test_Status UnitTest(Test_Variables tVar);
 
 // cppreference
 
@@ -71,9 +84,9 @@ int main()
         return AllTest_Failure;
     }
 
-    double a = 0, b = 0, c = 0; // 0x100 0x200 0x300
+    Coefficients coef; // 0x100 0x200 0x300
 
-    Input(&a, &b, &c);  // функция ввода
+    Input(&coef);  // функция ввода
 //                         return <значение>;
     //Testing program
     //Test(1, 2, 3);                        //Авто Тестирование на известных заранее наборах
@@ -81,14 +94,38 @@ int main()
     //Test(0, 2, 0);
 
     //решение входных данных
-    double x1 = 0, x2 = 0;
-    int nRoots = SolveSquare(a, b, c, &x1, &x2);    // функция решалки
+    //double x1 = 0, x2 = 0;
 
-    Output(x1, x2, nRoots); //функия вывода
+    Roots res;
+    res.nRoots = SolveSquare(coef, &res);   // функция решалки
+
+    Output(res); //функия вывода
 
     return Exit_Success;
 }
 
+/*struct Coeffs
+{
+    int a, b, c;
+};
+
+Coeffs coeffs = {1, 2, 3};
+Coeffs* coeffs_p = &coeffs;
+
+int* b_p = &(coeffs.b);
+int* b_p = &(coeffs_p->b);
+scanf("%d", &coeffs.b);
+
+*coeffs_p = {1,2,3};
+(*coeffs_p).b = 2;
+coeffs_p->b = 2;   // !!!!!!
+
+int a = 6;
+int* p = &a;
+//scanf("%d", &a);
+int c = *p;
+*p = 7;
+double* x;
  /*
 void assert(bool expr)
 {
@@ -101,7 +138,7 @@ void assert(bool expr)
 }   */
 
 // решалка
-Roots_Status SolveSquare(double a, double b, double c, double* x1, double* x2)
+/*Roots_Status SolveSquare(double a, double b, double c, double* x1, double* x2)
 {                                        //NULL
     assert (isfinite(a));//NAN not a number
     assert (isfinite(b));
@@ -145,7 +182,55 @@ Roots_Status SolveSquare(double a, double b, double c, double* x1, double* x2)
             return Two_Roots;
         }
     }
+}  */
+
+//решлака с структурой  доделать красный квадрат
+Roots_Status SolveSquare(Coefficients coef, Roots* res)
+{
+    assert (isfinite(coef.a));
+    assert (isfinite(coef.b));
+    assert (isfinite(coef.c));
+
+    assert (res->x1 != NULL);
+    assert (res->x2 != NULL);
+    assert (res->x1 != res->x2);
+
+    double D = coef.b * coef.b - 4 * coef.a * coef.c;
+
+    if (IsZero(coef.a))
+    {
+        if (IsZero(coef.b))
+        {
+            if (IsZero(coef.c))
+                return Many_Roots;
+            else
+                return No_Roots;
+        }
+        else
+        {
+            res->x1 = -coef.c / coef.b;
+            return One_Root;
+        }
+    }
+    else
+    {
+        if (D < 0)
+            return No_Roots;
+        else if (IsZero(D))
+        {
+            res->x1 = -coef.b / (2 * coef.a);
+            return One_Root;
+        }
+        else
+        {
+            double sqrt_D = sqrt(D);
+            res->x1 = (-coef.b + sqrt_D) / (2 * coef.a);
+            res->x2 = (-coef.b - sqrt_D) / (2 * coef.a);
+            return Two_Roots;
+        }
+    }
 }
+
 
 // bool
 bool IsZero(double number)
@@ -155,7 +240,7 @@ bool IsZero(double number)
 
  // функция ввода
 
-void Input(double* ptr_a, double* ptr_b, double* ptr_c)
+/*void Input(double* ptr_a, double* ptr_b, double* ptr_c)
 {
 
     printf("Enter a: ");
@@ -166,11 +251,25 @@ void Input(double* ptr_a, double* ptr_b, double* ptr_c)
 
     printf("Enter c: ");
     scanf("%lg", ptr_c);
+} */
+
+// функция ввода со структурой
+void Input(Coefficients* coef)
+{
+
+    printf("Enter a: ");
+    scanf("%lg", &(coef->a));
+
+    printf("Enter b: ");
+    scanf("%lg", &(coef->b));
+
+    printf("Enter c: ");
+    scanf("%lg", &(coef->c));
 }
 
-//функция вывода
 
-Exit_Status Output(double x1, double x2, int nRoots)
+//функция вывода
+/*Exit_Status Output(double x1, double x2, int nRoots)
 {
     switch(nRoots)
     {
@@ -183,6 +282,25 @@ Exit_Status Output(double x1, double x2, int nRoots)
         case Many_Roots: printf("Answer: any numders\n");
                 break;
         default: printf("main(): Error: nRoots = %d\n", nRoots);
+                return Exit_Failure;
+    }
+    return Exit_Success;
+} */
+
+//функция вывода со структурой
+Exit_Status Output(Roots res)
+{
+    switch(res.nRoots)
+    {
+        case No_Roots: printf("Answer: no roots\n");
+                break;
+        case One_Root: printf("Answer: x = %lg\n", res.x1);
+                break;
+        case Two_Roots: printf("Answer: x1 = %lg, x2 = %lg\n", res.x1, res.x2);
+                break;
+        case Many_Roots: printf("Answer: any numders\n");
+                break;
+        default: printf("main(): Error: nRoots = %d\n", res.nRoots);
                 return Exit_Failure;
     }
     return Exit_Success;
@@ -222,36 +340,35 @@ Exit_Status Output(double x1, double x2, int nRoots)
     }
 }*/
 
-// new UnitTest
-
-int UnitTest(Variables data)
+// UnitTest с структурой
+Test_Status UnitTest(Test_Variables tVar, Coefficients coef)
 {
     double x1 = 0, x2 = 0;
-    int nRoots = SolveSquare(data.a, data.b, data.c, &x1, &x2);
-    if (nRoots == data.nRootsRight)
+    int nRoots = SolveSquare(coef.a, coef.b, coef.c, &x1, &x2);
+    if (nRoots == tVar.nRootsRight)
     {
-        if (IsZero(x1 - data.x1right) || IsZero(x1 - data.x2right))
+        if (IsZero(x1 - tVar.x1right) || IsZero(x1 - tVar.x2right))
         {
-            if (IsZero(x2 - data.x2right) || IsZero(x2 - data.x1right))
+            if (IsZero(x2 - tVar.x2right) || IsZero(x2 - tVar.x1right))
                 return Test_Success;
             else
             {
                 printf("ErrorTest%d: x2 = %lg\nExpected: x2 = %lg or x2 = %lg\n",
-                data.nTest, x2, data.x1right, data.x2right);
+                tVar.nTest, x2, tVar.x1right, tVar.x2right);
                 return Test_Failure;
             }
         }
         else
         {
             printf("ErrorTest%d: x1 = %lg\nExpected: x1 = %lg or x1 = %lg\n",
-            data.nTest, x1, data.x1right, data.x2right);
+            tVar.nTest, x1, tVar.x1right, tVar.x2right);
             return Test_Failure;
         }
     }
     else
     {
         printf("ErrorTest%d: nRoots = %d\nExpected: nRootsRight = %d\n",
-        data.nTest, nRoots, data.nRootsRight);
+        tVar.nTest, nRoots, tVar.nRootsRight);
         return Test_Failure;
     }
 }
@@ -259,50 +376,23 @@ int UnitTest(Variables data)
 // Все тесты внутри
 AllTest_Status All_Tests()
 {
-    Variables test = {1, 1, -5, 4, 1, 4, 2};
+    Test_Variables Array_Of_Structures[] = {{1, 1, -5, 4, 1, 4, 2},
+                                            {2, 1, 14, 45, -9, -5, 2},
+                                            {3, 1, 3, -70, 7, -10, 2},
+                                            {4, 5, -8, -4, -0.4, 2, 2},
+                                            {5, 3, 4, 20, 0, 0, No_Roots},
+                                            {6, 4, 4, 1, -0.5, 0, 1},
+                                            {7, 0, 0, 0, 0, 0, Many_Roots}}
 
-    int result = UnitTest(test);
-    if (result == Test_Failure)
-        return AllTest_Failure;
-
-    test = {2, 1, 14, 45, -9, -5, 2};
-
-    result = UnitTest(test);
-    if (result == Test_Failure)
-        return AllTest_Failure;
-
-    test = {3, 1, 3, -70, 7, -10, 2};
-
-    result = UnitTest(test);
-    if (result == Test_Failure)
-        return AllTest_Failure;
-
-    test = {4, 5, -8, -4, -0.4, 2, 2};
-
-    result = UnitTest(test);
-    if (result == Test_Failure)
-        return AllTest_Failure;
-
-    test = {5, 3, 4, 20, 0, 0, No_Roots};
-
-    result = UnitTest(test);
-    if (result == Test_Failure)
-        return AllTest_Failure;
-
-    test = {6, 4, 4, 1, -0.5, 0, 1};
-
-    result = UnitTest(test);
-    if (result == Test_Failure)
-        return AllTest_Failure;
-
-    test = {7, 0, 0, 0, 0, 0, Many_Roots};
-
-    result = UnitTest(test);
-    if (result == Test_Failure)
-        return AllTest_Failure;
+    for (int i = 0, i < sizeof(Array_Of_Structures) / sizeof(Array_Of_Structures[0]), i++)
+    {
+        if (UnitTest(Array_Of_Structures[i] == Test_Failure)
+            return AllTest_Failure
+    }
 
     return AllTest_Success;
 }
+
 
 //Решалка_квадратки
 //main{UnitTest() input() решалка_квдратки() вывод_корней()}
