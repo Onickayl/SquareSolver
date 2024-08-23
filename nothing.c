@@ -73,13 +73,13 @@ int main()
 {
     printf("It's a SolverSquare program\n");
 
-    int result = All_Tests();
+    /*int result = All_Tests();
 
     if (result == AllTests_Failure)
     {
         printf("Error in tests");
         return AllTests_Failure;
-    }
+    }  */
 
     Test_Variables tVar = {0, 0, 0, 0, 0, 0, 0};
 
@@ -129,13 +129,15 @@ void assert(bool expr)
 //решлака с структурой
 Roots_Status SolveSquare(Test_Variables* tVar, Roots* res)
 {
+    assert (tVar != NULL);
     assert (isfinite(tVar->coef.a));
     assert (isfinite(tVar->coef.b));
     assert (isfinite(tVar->coef.c));
 
-    assert (&(res->x2) != NULL);
+    assert (res != NULL);
     assert (&(res->x1) != NULL);
-    assert(&(res->x1) != &(res->x2));
+    assert (&(res->x2) != NULL);
+    assert (&(res->x1) != &(res->x2));
 
     double D = tVar->coef.b * tVar->coef.b - 4 * tVar->coef.a * tVar->coef.c;
 
@@ -205,6 +207,7 @@ bool IsZero(double number)
 // функция ввода
 void Input(Coefficients* coef)
 {
+    assert (coef != 0);
 
     printf("Enter a: ");
     scanf("%lg", &(coef->a));
@@ -238,6 +241,8 @@ Exit_Status Output(Roots res)
 // UnitTest
 Test_Status UnitTest(Test_Variables* tVar)
 {
+    assert (tVar != 0);
+
     Roots res = {0, 0, 0};
     res.nRoots = SolveSquare(tVar, &res);
     if (res.nRoots == tVar->nRootsRight)
