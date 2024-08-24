@@ -1,8 +1,11 @@
 #include <stdio.h>
-#include <math.h>
 #include <TXLib.h>
+#include <math.h>
 #include <assert.h>
+#include <string.h>
 //#include <cmath>
+
+// README.md markdown
 
 // struct
 struct Coefficients
@@ -52,6 +55,7 @@ enum Roots_Status
 };
 
 const double EXP = 1e-10;
+const char* test_str = "--test"; //"Run the test";
 
 
 // functions
@@ -69,17 +73,21 @@ Test_Status UnitTest(Test_Variables* tVar);
 
 // cppreference
 
-int main()
+int main(int argc, char* argv[])
 {
     printf("It's a SolverSquare program\n");
 
-    /*int result = All_Tests();
-
-    if (result == AllTests_Failure)
+    if (argc == 2 && strcmp(argv[1], test_str) == 0)
     {
-        printf("Error in tests");
-        return AllTests_Failure;
-    }  */
+        printf("Tests are performed\n");
+        if (All_Tests() == AllTests_Failure)
+        {
+            printf("Error in tests");
+            return AllTests_Failure;
+        }
+    }
+    else
+        printf("Tests were not performed\n");
 
     Test_Variables tVar = {0, 0, 0, 0, 0, 0, 0};
 
@@ -126,7 +134,7 @@ void assert(bool expr)
 
 }   */
 
-//решлака с структурой
+//решалка с структурой
 Roots_Status SolveSquare(Test_Variables* tVar, Roots* res)
 {
     assert (tVar != NULL);
@@ -280,7 +288,7 @@ AllTests_Status All_Tests()
                                             {3, 1, 3, -70, 7, -10, 2}, {4, 5, -8, -4, -0.4, 2, 2},
                                             {5, 3, 4, 20, 0, 0, No_Roots}, {6, 4, 4, 1, -0.5, 0, 1},
                                             {7, 0, 0, 0, 0, 0, Many_Roots}, {8, 1, 5, 6, -3, -2, 2},
-                                            {9, 1, 2, 1, -1, 0, 1}, {10, -3, -1, 14, -7.0/3, 2, 2}};
+                                            {9, 1, 2, 1, -1, 9, 1}, {10, -3, -1, 14, -7.0/3, 2, 2}};   // 9 заменить на 0
 
     for (unsigned int i = 0; i < sizeof(Array_Of_Structures) / sizeof(Array_Of_Structures[0]); i++)
     {
