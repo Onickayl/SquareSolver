@@ -1,39 +1,33 @@
-# The solver of quadratic equations
+# Решатель квадратных уравнений
 
-It's a solver of quadratic equations.
-You can enter your own coefficients and get an answer.
+Привет! Это решатель квадратных уравнений.
+Вы можете ввести свои собственные коэффициенты и получить ответ.
+Пример:
 ``` sh
 Enter a: 1
 Enter b: -5
 Enter c: 4
 Answer: x1 = 4, x2 = 1
 ```
-Here _a_ is a coefficient for _x^2_, _b_ is for _x_ and _c_ is a free term.
+Здесь _a_ - это старший коэффициент, _b_ - второй коэффициент, а _c_ - свободный член.
 
-There's also a test built into this program. It checks if solver is working correctly.
-You can run it if you type --test on the command line.
-
+В программу также встроен тест, который проверяет решалку автоматически.
+Вы можете ввести _--test_ в командную строку после названия программы.
 ``` bash
 nothing --test
 ```
-At the same time, it will be displayed that the test is running
-
+При этом отобразиться, что тест запустился.
 ``` sh
 Tests are performed
 ```
-If there is an error in the program, then when you run the test, you will see it like this:
+Если же в решалке или в тесте будет ошибка, это отобразиться с указанием в каком тесте находится ошибка вот так:
 ``` sh
 ErrorTest9: x2 = 0
 Expected: x2 = -1 or x2 = 9
 Error in tests
 ```
 
-
-If you enter something else or don't enter anything at all, the test won't start and you'll see this:
-
+Если после названия программы вы напишете что-то другое или вообще ничего, то тест попросту не запуститься и Вы увидите это:
 ``` sh
 Tests were not performed
 ```
-привет!
-
-���-�� �� �������
