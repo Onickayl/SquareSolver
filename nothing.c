@@ -13,18 +13,17 @@ struct Coefficients
     double a, b, c;
 };
 
-struct Test_Variables
-{
-    int nTest;
-    Coefficients coef;
-    double x1right, x2right;
-    int nRootsRight;
-};
-
 struct Roots
 {
     double x1, x2;
     int nRoots;
+};
+
+struct Test_Variables
+{
+    int nTest;
+    Coefficients coef;
+    Roots rootsRight;
 };
 
 // enum
@@ -60,16 +59,15 @@ const char* test_str = "--test"; //"Run the test";
 
 // functions
 
-Roots_Status SolveSquare(Test_Variables* tVar, Roots* res);
+Roots_Status SolveSquare(Coefficients* coef, Roots* res);
 
-bool IsZero(double number);
-
-void Input(Coefficients* coef);
+void        Input(Coefficients* coef);
 Exit_Status Output(Roots res);
 
 AllTests_Status All_Tests();
+Test_Status     UnitTest(Test_Variables* tVar);
 
-Test_Status UnitTest(Test_Variables* tVar);
+bool IsZero(double number);
 
 // cppreference
 
@@ -94,7 +92,7 @@ int main(int argc, char* argv[])
     Input(&tVar.coef);  // функция ввода
 
     Roots res = {0, 0, 0};
-    res.nRoots = SolveSquare(&tVar, &res);   // функция решалки
+    res.nRoots = SolveSquare(&tVar.coef, &res);   // функция решалки
 
     Output(res); //функия вывода
 
@@ -135,32 +133,32 @@ void assert(bool expr)
 }   */
 
 //решалка с структурой
-Roots_Status SolveSquare(Test_Variables* tVar, Roots* res)
+Roots_Status SolveSquare(Coefficients* coef, Roots* res)
 {
-    assert (tVar != NULL);
-    assert (isfinite(tVar->coef.a));
-    assert (isfinite(tVar->coef.b));
-    assert (isfinite(tVar->coef.c));
+    assert (coef != NULL);
+    assert (isfinite(coef->a));
+    assert (isfinite(coef->b));
+    assert (isfinite(coef->c));
 
     assert (res != NULL);
     assert (&(res->x1) != NULL);
     assert (&(res->x2) != NULL);
     assert (&(res->x1) != &(res->x2));
 
-    double D = tVar->coef.b * tVar->coef.b - 4 * tVar->coef.a * tVar->coef.c;
+    double D = coef->b * coef->b - 4 * coef->a * coef->c;
 
-    if (IsZero(tVar->coef.a))
+    if (IsZero(coef->a))
     {
-        if (IsZero(tVar->coef.b))
+        if (IsZero(coef->b))
         {
-            if (IsZero(tVar->coef.c))
+            if (IsZero(coef->c))
                 return Many_Roots;
             else
                 return No_Roots;
         }
         else
         {
-            res->x1 = -tVar->coef.c / tVar->coef.b;
+            res->x1 = -coef->c / coef->b;
             return One_Root;
         }
     }
@@ -170,14 +168,14 @@ Roots_Status SolveSquare(Test_Variables* tVar, Roots* res)
             return No_Roots;
         else if (IsZero(D))
         {
-            res->x1 = -tVar->coef.b / (2 * tVar->coef.a);
+            res->x1 = -coef->b / (2 * coef->a);
             return One_Root;
         }
         else
         {
             double sqrt_D = sqrt(D);
-            res->x1 = (-tVar->coef.b + sqrt_D) / (2 * tVar->coef.a);
-            res->x2 = (-tVar->coef.b - sqrt_D) / (2 * tVar->coef.a);
+            res->x1 = (-coef->b + sqrt_D) / (2 * coef->a);
+            res->x2 = (-coef->b - sqrt_D) / (2 * coef->a);
             return Two_Roots;
         }
     }
@@ -252,31 +250,31 @@ Test_Status UnitTest(Test_Variables* tVar)
     assert (tVar != 0);
 
     Roots res = {0, 0, 0};
-    res.nRoots = SolveSquare(tVar, &res);
-    if (res.nRoots == tVar->nRootsRight)
+    res.nRoots = SolveSquare(&(tVar->coef), &res);
+    if (res.nRoots == tVar->rootsRight.nRoots)
     {
-        if (IsZero(res.x1 - tVar->x1right) || IsZero(res.x1 - tVar->x2right))
+        if (IsZero(res.x1 - tVar->rootsRight.x1) || IsZero(res.x1 - tVar->rootsRight.x2))
         {
-            if (IsZero(res.x2 - tVar->x2right) || IsZero(res.x2 - tVar->x1right))
+            if (IsZero(res.x2 - tVar->rootsRight.x2) || IsZero(res.x2 - tVar->rootsRight.x1))
                 return Test_Success;
             else
             {
                 printf("ErrorTest%d: x2 = %lg\nExpected: x2 = %lg or x2 = %lg\n",
-                tVar->nTest, res.x2, tVar->x1right, tVar->x2right);
+                tVar->nTest, res.x2, tVar->rootsRight.x1, tVar->rootsRight.x2);
                 return Test_Failure;
             }
         }
         else
         {
             printf("ErrorTest%d: x1 = %lg\nExpected: x1 = %lg or x1 = %lg\n",
-            tVar->nTest, res.x1, tVar->x1right, tVar->x2right);
+            tVar->nTest, res.x1, tVar->rootsRight.x1, tVar->rootsRight.x2);
             return Test_Failure;
         }
     }
     else
     {
         printf("ErrorTest%d: nRoots = %d\nExpected: nRootsRight = %d\n",
-        tVar->nTest, res.nRoots, tVar->nRootsRight);
+        tVar->nTest, res.nRoots, tVar->rootsRight.nRoots);
         return Test_Failure;
     }
 }
