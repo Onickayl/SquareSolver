@@ -34,4 +34,4 @@ If you enter something else or don't enter anything at all, the test won't start
 ``` sh
 Tests were not performed
 ```
-
+Что-то на русском
