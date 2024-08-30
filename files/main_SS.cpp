@@ -9,15 +9,10 @@
 #include "Tests.h"
 
 
-// README.md markdown
-
-// const
-const char* test_str = "--test"; //"Run the test";
+const char* test_str = "--test";
 
 
-// cppreference
-
-int main(int argc, char* argv[])
+int main(const int argc, char* argv[])
 {
     printf("It's a SolverSquare program\n");
 
@@ -35,13 +30,12 @@ int main(int argc, char* argv[])
 
     Coefficients coef = {0, 0, 0};
 
-    Input(&coef);  // функция ввода
+    Input(&coef);
 
     Roots res = {0, 0, 0};
-    res.nRoots = SolveSquare(&coef, &res);   // функция решалки
+    res.nRoots = SolveSquare(&coef, &res);
 
-    Output(res); //функия вывода
+    Output(res);
 
     return Exit_Success;
 }
-

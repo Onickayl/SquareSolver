@@ -8,7 +8,28 @@ enum Test_Status
     Test_Failure = 1,
 };
 
+static Test_Status UnitTest(Test_Variables* tVar);
+
 // UnitTest
+AllTests_Status All_Tests()
+{
+    Test_Variables Array_Of_Structures[] = {
+        {1, 1, -5,   4,  1,   4, Two_Roots},    { 2,  1, 14, 45, -9,    -5, Two_Roots},
+        {3, 1,  3, -70,  7, -10, Two_Roots},    { 4,  5, -8, -4, -0.4,   2, Two_Roots},
+        {5, 3,  4,  20,  0,   0, No_Roots},     { 6,  4,  4,  1, -0.5,   0, One_Root},
+        {7, 0,  0,   0,  0,   0, Many_Roots},   { 8,  1,  5,  6, -3,    -2, Two_Roots},
+        {9, 1,  2,   1, -1,   0, One_Root},     {10, -3, -1, 14, -7.0/3, 2, Two_Roots}};
+
+    size_t size = sizeof(Array_Of_Structures) / sizeof(Array_Of_Structures[0]);
+    for (size_t i = 0; i < size; i++)
+    {
+        if (UnitTest(&Array_Of_Structures[i]) == Test_Failure)
+            return AllTests_Failure;
+    }
+
+    return AllTests_Success;
+}
+
 Test_Status UnitTest(Test_Variables* tVar)
 {
     assert (tVar != 0);
@@ -43,21 +64,3 @@ Test_Status UnitTest(Test_Variables* tVar)
     }
 }
 
-// Все тесты внутри
-AllTests_Status All_Tests()
-{
-    Test_Variables Array_Of_Structures[] = {{1, 1, -5, 4, 1, 4, 2}, {2, 1, 14, 45, -9, -5, 2},
-                                            {3, 1, 3, -70, 7, -10, 2}, {4, 5, -8, -4, -0.4, 2, 2},
-                                            {5, 3, 4, 20, 0, 0, No_Roots}, {6, 4, 4, 1, -0.5, 0, 1},
-                                            {7, 0, 0, 0, 0, 0, Many_Roots}, {8, 1, 5, 6, -3, -2, 2},
-                                            {9, 1, 2, 1, -1, 0, 1}, {10, -3, -1, 14, -7.0/3, 2, 2}};
-
-    size_t size = sizeof(Array_Of_Structures) / sizeof(Array_Of_Structures[0]);
-    for (size_t i = 0; i < size; i++)
-    {
-        if (UnitTest(&Array_Of_Structures[i]) == Test_Failure)
-            return AllTests_Failure;
-    }
-
-    return AllTests_Success;
-}

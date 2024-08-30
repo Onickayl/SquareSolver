@@ -1,7 +1,8 @@
-//решалка с структурой
 #include "SolverSquare.h"
 
-// решалка
+Roots_Status SolveLine(Coefficients* coef, Roots* res);
+
+
 Roots_Status SolveSquare(Coefficients* coef, Roots* res)
 {
     assert (coef != NULL);
@@ -18,18 +19,7 @@ Roots_Status SolveSquare(Coefficients* coef, Roots* res)
 
     if (IsZero(coef->a))
     {
-        if (IsZero(coef->b))
-        {
-            if (IsZero(coef->c))
-                return Many_Roots;
-            else
-                return No_Roots;
-        }
-        else
-        {
-            res->x1 = -coef->c / coef->b;
-            return One_Root;
-        }
+        return SolveLine(coef, res);
     }
     else
     {
@@ -50,7 +40,33 @@ Roots_Status SolveSquare(Coefficients* coef, Roots* res)
     }
 }
 
-// сравнение с нулём
+Roots_Status SolveLine(Coefficients* coef, Roots* res)
+{
+    assert (coef != NULL);
+    assert (isfinite(coef->a));
+    assert (isfinite(coef->b));
+    assert (isfinite(coef->c));
+
+    assert (res != NULL);
+    assert (&(res->x1) != NULL);
+    assert (&(res->x2) != NULL);
+    assert (&(res->x1) != &(res->x2));
+
+    if (IsZero(coef->b))
+    {
+        if (IsZero(coef->c))
+            return Many_Roots;
+        else
+            return No_Roots;
+    }
+    else
+    {
+        res->x1 = -coef->c / coef->b;
+        return One_Root;
+    }
+
+}
+
 bool IsZero(double number)
 {
     return (fabs(number - 0) < EXP);
