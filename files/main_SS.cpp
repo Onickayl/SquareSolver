@@ -30,12 +30,12 @@ int main(const int argc, char* argv[])
 
     Coefficients coef = {0, 0, 0};
 
-    Input(&coef);
+    Input_Coefficients(&coef);
 
     Roots res = {0, 0, 0};
     res.nRoots = SolveSquare(&coef, &res);
 
-    Output(res);
+    Output_Results(res);
 
     return Exit_Success;
 }

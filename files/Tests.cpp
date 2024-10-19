@@ -1,5 +1,3 @@
-// Tests
-
 #include "Tests.h"
 
 enum Test_Status
@@ -13,6 +11,7 @@ static Test_Status UnitTest(Test_Variables* tVar);
 // UnitTest
 AllTests_Status All_Tests()
 {
+    // TODO: add const
     Test_Variables Array_Of_Structures[] = {
         {1, 1, -5,   4,  1,   4, Two_Roots},    { 2,  1, 14, 45, -9,    -5, Two_Roots},
         {3, 1,  3, -70,  7, -10, Two_Roots},    { 4,  5, -8, -4, -0.4,   2, Two_Roots},
@@ -23,14 +22,15 @@ AllTests_Status All_Tests()
     size_t size = sizeof(Array_Of_Structures) / sizeof(Array_Of_Structures[0]);
     for (size_t i = 0; i < size; i++)
     {
-        if (UnitTest(&Array_Of_Structures[i]) == Test_Failure)
+        if (UnitTest(&Array_Of_Structures[i]) == Test_Failure) // TODO: run all test
             return AllTests_Failure;
     }
 
     return AllTests_Success;
 }
 
-Test_Status UnitTest(Test_Variables* tVar)
+// TODO: add const
+Test_Status UnitTest(const Test_Variables* tVar)
 {
     assert (tVar != 0);
 

@@ -10,7 +10,7 @@
 
 // struct
 
-struct Test_Variables
+struct Test_Variables // TODO: rename
 {
     int nTest;
     Coefficients coef;

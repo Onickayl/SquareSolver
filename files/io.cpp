@@ -1,13 +1,12 @@
 #include "io.h"
 
 
-
-void Input(Coefficients* coef)
+void Input_Coefficients(Coefficients* coef)
 {
     assert (coef != 0);
 
     printf("Enter a: ");
-    scanf("%lg", &(coef->a));
+    scanf("%lg", &(coef->a));  // TODO: check error, scanf (помимо >=0)
 
     printf("Enter b: ");
     scanf("%lg", &(coef->b));
@@ -18,7 +17,7 @@ void Input(Coefficients* coef)
 
 
 
-Exit_Status Output(Roots res)
+Exit_Status Output_Results(Roots res)
 {
     switch(res.nRoots)
     {
@@ -34,6 +33,7 @@ Exit_Status Output(Roots res)
         case Many_Roots: printf("Answer: any numders\n");
                 break;
 
+        // TODO: прочитай о stderr, stdout, fprintf(stderr, ....)
         default: printf("main(): Error: nRoots = %d\n", res.nRoots);
                 return Exit_Failure;
     }

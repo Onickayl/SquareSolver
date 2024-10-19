@@ -15,28 +15,28 @@ Roots_Status SolveSquare(Coefficients* coef, Roots* res)
     assert (&(res->x2) != NULL);
     assert (&(res->x1) != &(res->x2));
 
-    double D = coef->b * coef->b - 4 * coef->a * coef->c;
-
     if (IsZero(coef->a))
     {
         return SolveLine(coef, res);
     }
+
+    double D = coef->b * coef->b - 4 * coef->a * coef->c;
+
+    if (D < 0)
+    {
+        return No_Roots;
+    }
+    else if (IsZero(D))
+    {
+        res->x1 = -coef->b / (2 * coef->a);
+        return One_Root;
+    }
     else
     {
-        if (D < 0)
-            return No_Roots;
-        else if (IsZero(D))
-        {
-            res->x1 = -coef->b / (2 * coef->a);
-            return One_Root;
-        }
-        else
-        {
-            double sqrt_D = sqrt(D);
-            res->x1 = (-coef->b + sqrt_D) / (2 * coef->a);
-            res->x2 = (-coef->b - sqrt_D) / (2 * coef->a);
-            return Two_Roots;
-        }
+        double sqrt_D = sqrt(D);
+        res->x1 = (-coef->b + sqrt_D) / (2 * coef->a);
+        res->x2 = (-coef->b - sqrt_D) / (2 * coef->a);
+        return Two_Roots;
     }
 }
 

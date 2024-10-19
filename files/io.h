@@ -1,5 +1,7 @@
-#ifndef IO
-#define IO
+#ifndef IO_H
+#define IO_H
+
+// TODO: add file extension to include guards + comment
 
 #include <assert.h>
 #include <stdio.h>
@@ -16,4 +18,4 @@ enum Exit_Status
 void        Input(Coefficients* coef);
 Exit_Status Output(Roots res);
 
-#endif
+#endif // IO_H
